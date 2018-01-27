@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "**/build-qt-*": true,
+        "**/qt*": true,
+        "**/deploy*": true,
+        "**/*.qmlc": true,
+        "**/rcc*": true,
+        "**/*.qm": true,
+    },
+}

@@ -1,0 +1,56 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "qtdeploy build",
+            "group": {
+                "kind": "build",
+            },
+            "problemMatcher":"$go",
+        },
+        {
+            "label": "build fast",
+            "type": "shell",
+            "command": "qtdeploy -fast build",
+            "group": {
+                "kind": "build",
+                "isDefault": true,
+            },
+            "problemMatcher":"$go",
+        },
+        {
+            "label": "moc fast",
+            "type": "shell",
+            "command": "qtmoc -fast",
+            "group": {
+                "kind": "build",
+            },
+            "problemMatcher":"$go",
+        },
+        {
+            "label": "moc",
+            "type": "shell",
+            "command": "qtmoc",
+            "group": {
+                "kind": "build",
+            },
+            "problemMatcher":"$go",
+        },
+
+        {
+            "label": "run",
+            "type": "shell",
+            "linux": {
+                "command": "deploy/linux/sexy-filter"
+            },
+            "group": {
+                "kind": "test",
+            },
+            "problemMatcher":"$go",
+        },
+    ]
+}

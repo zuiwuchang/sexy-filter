@@ -1,0 +1,8 @@
+{
+    "_comment":"使用語言 如果是無效值 則使用 中文 zh_TW",
+    "_comment":"不要使用 zh_CN 這是不存在的語言 會被強制忽略",
+    "Lang":"zh_TW",
+
+    "_comment":"界面主題 如果是無效值 則使用 Material Dark",
+    "Style":"Material Dark"
+}

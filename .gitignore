@@ -37,3 +37,11 @@ Makefile*
 # QtCtreator CMake
 CMakeLists.txt.user*
 
+# go qt
+rcc.cpp
+rcc.h
+rcc.qrc
+rcc_cgo_*
+deploy/*
+*.qm
+*.qmlc

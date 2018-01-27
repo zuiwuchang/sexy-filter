@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../qml/main.qml</file>
+        <file>../locale/zh_TW.qm</file>
+        <file>../qml/About.qml</file>
+        <file>../qml/Settings.qml</file>
+    </qresource>
+</RCC>
