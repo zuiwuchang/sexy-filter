@@ -25,7 +25,7 @@
         {
             "label": "moc fast",
             "type": "shell",
-            "command": "qtmoc -fast",
+            "command": "qtmoc -fast desktop bridge",
             "group": {
                 "kind": "build",
             },
@@ -34,7 +34,7 @@
         {
             "label": "moc",
             "type": "shell",
-            "command": "qtmoc",
+            "command": "qtmoc desktop bridge",
             "group": {
                 "kind": "build",
             },

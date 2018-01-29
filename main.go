@@ -5,26 +5,80 @@ import (
 	"github.com/therecipe/qt/gui"
 	"github.com/therecipe/qt/qml"
 	"github.com/therecipe/qt/quickcontrols2"
-	"log"
 	"os"
+	"path/filepath"
+	"sexy-filter/bridge"
+	"sexy-filter/configure"
+	kLog "sexy-filter/log"
 )
 
 func main() {
+	configure.Init(os.Args[0])
+
 	app := gui.NewQGuiApplication(len(os.Args), os.Args)
 	app.SetAttribute(core.Qt__AA_EnableHighDpiScaling, true)
+	app.SetOrganizationName("cerberus")
+	app.SetOrganizationDomain("doc.king011.com")
+	app.SetApplicationName("go-qt-sexy-filter")
 
-	translator := core.NewQTranslator(nil)
-	if translator.Load2(core.NewQLocale(), "zh_TW", "_", "locale", ".qm") {
-		core.QCoreApplication_InstallTranslator(translator)
+	s := core.NewQSettings5(nil)
+	//初始 語言 配置
+	local := s.Value("locale", core.NewQVariant14("zh_TW")).ToString()
+	configure.InitLocale(local)
+	local = configure.GetLocale()
+	//初始 界面 配置
+	style := s.Value("style", core.NewQVariant7(0)).ToInt(false)
+	configure.InitStyle(style)
+	style = configure.GetStyle()
+
+	if local == "zh_TW" {
+		translator := core.NewQTranslator(nil)
+		if translator.Load2(core.NewQLocale(), "zh_TW", "_", ":/locale", ".qm") {
+			core.QCoreApplication_InstallTranslator(translator)
+		} else {
+			if kLog.Warn != nil {
+				kLog.Warn.Println("cannot load translator", core.QLocale_System().Name())
+			}
+		}
 	} else {
-		log.Fatalln("cannot load translator", core.QLocale_System().Name())
+		dir, e := filepath.Abs(os.Args[0])
+		if e == nil {
+			dir = filepath.Dir(dir) + "/locale"
+		} else {
+			dir = "lolcale"
+
+			if kLog.Warn != nil {
+				kLog.Warn.Println(e)
+			}
+		}
+
+		translator := core.NewQTranslator(nil)
+		if translator.Load2(core.NewQLocale(), configure.GetLocale(), "_", dir, ".qm") {
+			core.QCoreApplication_InstallTranslator(translator)
+		} else {
+			if kLog.Warn != nil {
+				kLog.Warn.Println(dir)
+				kLog.Warn.Println("cannot load translator", core.QLocale_System().Name())
+			}
+
+			if translator.Load2(core.NewQLocale(), "zh_TW", "_", ":/locale", ".qm") {
+				core.QCoreApplication_InstallTranslator(translator)
+			} else {
+				if kLog.Warn != nil {
+					kLog.Warn.Println("cannot load translator", core.QLocale_System().Name())
+				}
+			}
+		}
+	}
+	if style < 2 {
+		quickcontrols2.QQuickStyle_SetStyle("Material")
+	} else {
+		quickcontrols2.QQuickStyle_SetStyle("Universal")
 	}
 
-	quickcontrols2.QQuickStyle_SetStyle("material")
-
 	engine := qml.NewQQmlApplicationEngine(nil)
+	bridge.Init(engine.RootContext())
 
 	engine.Load(core.NewQUrl3("qml/main.qml", 0))
-
 	gui.QGuiApplication_Exec()
 }

@@ -9,6 +9,10 @@ Popup {
     modal: true
     focus: true
 
+    onClosed: {
+        comboxLocale.val = BridgeConfigure.getLocaleIndex();
+        comboxStyle.val = BridgeConfigure.getStyle();
+    }
     contentItem: ColumnLayout {
         id: settingsColumn
         spacing: 20
@@ -24,13 +28,11 @@ Popup {
             Label {
                 text: qsTr("Lang:")
             }
-
             ComboBox {
-                property int styleIndex: -1
-                model: ["zh_TW", "en_USA"]
-                Component.onCompleted: {
-
-                }
+                id: comboxLocale
+                property var val: BridgeConfigure.getLocaleIndex()
+                currentIndex: val
+                model: BridgeConfigure.getLocales()
                 Layout.fillWidth: true
             }
         }
@@ -43,20 +45,18 @@ Popup {
             }
 
             ComboBox {
-                id: styleBox
-                property int styleIndex: -1
-                model: ["Material Dark","Material Light", "Universal Dark","Universal Light"]
-                Component.onCompleted: {
-
-                }
+                id: comboxStyle
+                property var val: BridgeConfigure.getStyle()
+                currentIndex: val
+                model: BridgeConfigure.getStyles()
                 Layout.fillWidth: true
             }
         }
 
         Label {
-            text: "Restart required"
+            text: qsTr("Restart required")
             color: "#e41e25"
-            opacity: 1.0
+            opacity: ((comboxLocale.currentIndex == comboxLocale.val) && (comboxStyle.currentIndex == comboxStyle.val))?0.0:1.0
             horizontalAlignment: Label.AlignHCenter
             verticalAlignment: Label.AlignVCenter
             Layout.fillWidth: true
@@ -70,10 +70,16 @@ Popup {
                 id: okButton
                 text: qsTr("Sure")
                 onClicked: {
-                    settings.style = styleBox.displayText
-                    settingsPopup.close()
-                }
+                    var locale = comboxLocale.currentIndex;
+                    var style = comboxStyle.currentIndex;
+                    if((locale == comboxLocale.val) && (style == comboxStyle.val)){
+                        settingsPopup.close();
+                        return;
+                    }
 
+                    BridgeConfigure.save2(locale,style);
+                    settingsPopup.close();
+                }
                 Layout.fillWidth: true
             }
 
@@ -81,10 +87,8 @@ Popup {
                 id: cancelButton
                 text: qsTr("Cancel")
                 onClicked: {
-                    styleBox.currentIndex = styleBox.styleIndex
-                    settingsPopup.close()
+                    settingsPopup.close();
                 }
-
                 Layout.fillWidth: true
             }
         }

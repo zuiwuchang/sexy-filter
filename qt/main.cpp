@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QTranslator>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -19,5 +20,6 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
+    qDebug()<<engine.offlineStoragePath();
     return app.exec();
 }

@@ -45,3 +45,8 @@ rcc_cgo_*
 deploy/*
 *.qm
 *.qmlc
+moc_cgo_*
+moc.h
+moc_moc.h
+moc.cpp
+moc.go

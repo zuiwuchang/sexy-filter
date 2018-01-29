@@ -12,7 +12,8 @@ ApplicationWindow {
   minimumWidth: 640
   minimumHeight: 480
 
-  Material.theme: "Dark"
+  Material.theme: BridgeConfigure.getStyle()==0?"Dark":"Light"
+  Universal.theme: BridgeConfigure.getStyle()==2?"Dark":"Light"
 
   header: ToolBar {
       RowLayout {
