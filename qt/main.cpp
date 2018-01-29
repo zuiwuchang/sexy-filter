@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QTranslator>
 #include <QDebug>
+#include "bridgeconfigure.h"
+#include <QQmlContext>
 
 int main(int argc, char *argv[])
 {
@@ -10,13 +12,22 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+    app.setOrganizationName("cerberus");
+    app.setOrganizationDomain("doc.king011.com");
+    app.setApplicationName("go-qt-sexy-filter");
+
 
     QTranslator translator;
-    translator.load("../locale/zh_TW.qm");
+    translator.load(":locale/zh_TW.qm");
     app.installTranslator(&translator);
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("../qml/main.qml")));
+    QQmlContext* content = engine.rootContext();
+
+    BridgeConfigure bridgeConfigure;
+    content->setContextProperty("BridgeConfigure",&bridgeConfigure);
+
+    engine.load(QUrl(QStringLiteral("qrc:/views/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 

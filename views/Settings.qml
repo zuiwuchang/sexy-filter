@@ -36,7 +36,6 @@ Popup {
                 Layout.fillWidth: true
             }
         }
-
         RowLayout {
             spacing: 10
 
