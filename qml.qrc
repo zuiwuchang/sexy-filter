@@ -8,5 +8,7 @@
         <file>views/images/back.png</file>
         <file>views/images/drawer.png</file>
         <file>views/images/menu.png</file>
+        <file>views/pages/plugins.qml</file>
+        <file>views/images/sexy.ico</file>
     </qresource>
 </RCC>

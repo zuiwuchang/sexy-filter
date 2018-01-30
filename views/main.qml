@@ -100,7 +100,7 @@ ApplicationWindow {
 
               model: ListModel {
                   ListElement { title: qsTr("proxy settings"); source: "pages/proxy.qml" }
-                  ListElement { title: qsTr("plugins test"); source: "pages/test.qml" }
+                  ListElement { title: qsTr("plugins test"); source: "pages/plugins.qml" }
               }
 
               ScrollIndicator.vertical: ScrollIndicator { }

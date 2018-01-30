@@ -17,6 +17,9 @@ func main() {
 
 	app := gui.NewQGuiApplication(len(os.Args), os.Args)
 	app.SetAttribute(core.Qt__AA_EnableHighDpiScaling, true)
+
+	gui.QGuiApplication_SetWindowIcon(gui.NewQIcon5(":/views/images/sexy.ico"))
+
 	app.SetOrganizationName("cerberus")
 	app.SetOrganizationDomain("doc.king011.com")
 	app.SetApplicationName("go-qt-sexy-filter")

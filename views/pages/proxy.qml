@@ -27,17 +27,6 @@ Pane{
         }
         Column{
             anchors.horizontalCenter: parent.horizontalCenter
-            Label{
-                id:labelEmsg
-                wrapMode: Label.Wrap
-                opacity: 0.0
-                text: "none"
-                color: "red"
-            }
-        }
-        Column{
-            anchors.horizontalCenter: parent.horizontalCenter
-            Layout.fillHeight: true
 
             GridLayout{
                 width: thisView.width - 200
@@ -111,17 +100,8 @@ Pane{
                                                          textTestUrl.text
                                               );
                         gridLayout.enabled = false;
-                        labelEmsg.opacity = 0.0;
+                        labelEmsg.visible = false;
                         busyIndicator.opacity = 1.0;
-                        /*
-                        if(emsg){
-                            labelEmsg.color="red"
-                            labelEmsg.text = emsg;
-                        }else{
-                            labelEmsg.color="green"
-                            labelEmsg.text = qsTr("connect success");
-                        }
-                        */
                     }
                 }
                 Connections{
@@ -136,11 +116,11 @@ Pane{
                         gridLayout.enabled = true;
                         busyIndicator.opacity = 0.0;
                         if(emsg){
-                            labelEmsg.opacity = 1.0;
+                            labelEmsg.visible = true;
                             labelEmsg.color="red";
                             labelEmsg.text = emsg;
                         }else{
-                            labelEmsg.opacity = 1.0;
+                            labelEmsg.visible = true;
                             labelEmsg.color = "green";
                             labelEmsg.text = qsTr("connect success");
                         }
@@ -149,6 +129,17 @@ Pane{
 
             }
 
+        }
+
+        Column{
+            anchors.horizontalCenter: parent.horizontalCenter
+            Label{
+                id:labelEmsg
+                wrapMode: Label.Wrap
+                visible: false
+                color: "red"
+            }
+            Layout.fillHeight: true
         }
     }
 }

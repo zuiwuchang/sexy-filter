@@ -3,9 +3,11 @@
 #include <QTranslator>
 #include <QDebug>
 #include <QQmlContext>
+#include <QIcon>
 
 #include "bridgeconfigure.h"
 #include "bridgeproxy.h"
+#include "bridgeplugins.h"
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_WIN)
@@ -13,6 +15,8 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+    app.setWindowIcon(QIcon(":/views/images/sexy.ico"));
+
     app.setOrganizationName("cerberus");
     app.setOrganizationDomain("doc.king011.com");
     app.setApplicationName("go-qt-sexy-filter");
@@ -29,6 +33,8 @@ int main(int argc, char *argv[])
     content->setContextProperty("BridgeConfigure",&bridgeConfigure);
     BridgeProxy bridgeProxy;
     content->setContextProperty("BridgeProxy",&bridgeProxy);
+    BridgePlugins bridgePlugins;
+    content->setContextProperty("BridgePlugins",&bridgePlugins);
 
     engine.load(QUrl(QStringLiteral("qrc:/views/main.qml")));
     if (engine.rootObjects().isEmpty())

@@ -7,4 +7,5 @@ import (
 func Init(context *qml.QQmlContext) {
 	initConfigure(context)
 	initProxy(context)
+	initPlugins(context)
 }

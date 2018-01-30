@@ -1,4 +1,4 @@
-QT += quick qml
+QT += quick qml gui
 CONFIG += c++11
 LIBS += -lboost_system -lboost_thread -lboost_date_time
 
@@ -17,7 +17,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += qt/bridgeconfigure.cpp \
     qt/main.cpp \
-    qt/bridgeproxy.cpp
+    qt/bridgeproxy.cpp \
+    qt/bridgeplugins.cpp
 
 RESOURCES += qml.qrc
 
@@ -36,4 +37,5 @@ DISTFILES +=
 
 HEADERS += \
     qt/bridgeconfigure.h \
-    qt/bridgeproxy.h
+    qt/bridgeproxy.h \
+    qt/bridgeplugins.h
