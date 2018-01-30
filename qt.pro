@@ -1,5 +1,6 @@
 QT += quick qml
 CONFIG += c++11
+LIBS += -lboost_system -lboost_thread -lboost_date_time
 
 TRANSLATIONS += locale/zh_TW.ts
 
@@ -15,7 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += qt/bridgeconfigure.cpp \
-    qt/main.cpp
+    qt/main.cpp \
+    qt/bridgeproxy.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,4 +35,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
-    qt/bridgeconfigure.h
+    qt/bridgeconfigure.h \
+    qt/bridgeproxy.h

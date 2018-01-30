@@ -3,6 +3,10 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 Pane{
+    id:thisView
+    property real proxyNone: 0
+    property real proxySocks5: 3
+    property real requestID: 0
     Settings{
         id:settingsProxy
         category: "Proxy"
@@ -10,62 +14,141 @@ Pane{
         property string addr: textAddr.text
         property string user: textUser.text
         property string pwd: textPwd.text
+        property string testUrl: textTestUrl.text
     }
     ColumnLayout {
-        anchors.centerIn: parent
-
-        GridLayout{
-            columns: 2
+        anchors.fill: parent
+        Column{
+            anchors.horizontalCenter: parent.horizontalCenter
+            BusyIndicator{
+                id:busyIndicator
+                opacity: 0.0
+            }
+        }
+        Column{
+            anchors.horizontalCenter: parent.horizontalCenter
             Label{
-                text:qsTr("type:")
+                id:labelEmsg
+                wrapMode: Label.Wrap
+                opacity: 0.0
+                text: "none"
+                color: "red"
             }
-            ComboBox{
-                id:comboxType
-                Layout.fillWidth: true
-                model: ["http","https","socks5"]
-                Component.onCompleted: currentIndex = settingsProxy.pos
-            }
+        }
+        Column{
+            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.fillHeight: true
 
-            Label{
-                text: qsTr("addr:")
-            }
-            TextField{
-                id:textAddr
-                Layout.fillWidth: true
-                placeholderText: qsTr("proxy address")
-                text: settingsProxy.addr
-            }
-
-            Label{
-                text: qsTr("user:")
-            }
-            TextField{
-                enabled: comboxType.currentIndex == 2
-                id:textUser
-                Layout.fillWidth: true
-                placeholderText: qsTr("proxy user name")
-                text: settingsProxy.user
-            }
-
-            Label{
-                text: qsTr("pwd:")
-            }
-            TextField{
-                enabled: comboxType.currentIndex == 2
-                id:textPwd
-                Layout.fillWidth: true
-                placeholderText: qsTr("proxy password")
-                text: settingsProxy.pwd
-            }
-
-            Label{}
-
-            Button{
-                text: qsTr("test")
-                onClicked: {
-
+            GridLayout{
+                width: thisView.width - 200
+                Layout.fillHeight: true
+                anchors.horizontalCenter: parent.horizontalCenter
+                id:gridLayout
+                columns: 2
+                Label{
+                    text:qsTr("type:")
                 }
+                ComboBox{
+                    id:comboxType
+                    Layout.fillWidth: true
+                    model: [qsTr("none"),"http","https","socks5"]
+                    Component.onCompleted: currentIndex = settingsProxy.pos
+                }
+
+                Label{
+                    text: qsTr("addr:")
+                }
+                TextField{
+                    enabled: comboxType.currentIndex != thisView.proxyNone
+                    id:textAddr
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("proxy address")
+                    text: settingsProxy.addr
+                }
+
+                Label{
+                    text: qsTr("user:")
+                }
+                TextField{
+                    enabled: comboxType.currentIndex == thisView.proxySocks5
+                    id:textUser
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("proxy user name")
+                    text: settingsProxy.user
+                }
+
+                Label{
+                    text: qsTr("pwd:")
+                }
+                TextField{
+                    enabled: comboxType.currentIndex == thisView.proxySocks5
+                    id:textPwd
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("proxy password")
+                    text: settingsProxy.pwd
+                }
+
+
+                Label{
+                    text: qsTr("test url:")
+                }
+                TextField{
+                    enabled: comboxType.currentIndex != thisView.proxyNone
+                    id:textTestUrl
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("test proxy connect url")
+                    text: settingsProxy.testUrl
+                }
+                Label{}
+                Button{
+                    enabled: comboxType.currentIndex != thisView.proxyNone
+                    text: qsTr("test")
+                    onClicked: {
+                        thisView.requestID = BridgeProxy.testProxy(comboxType.currentIndex,
+                                                         textAddr.text,
+                                                         textUser.text,
+                                                         textPwd.text,
+                                                         textTestUrl.text
+                                              );
+                        gridLayout.enabled = false;
+                        labelEmsg.opacity = 0.0;
+                        busyIndicator.opacity = 1.0;
+                        /*
+                        if(emsg){
+                            labelEmsg.color="red"
+                            labelEmsg.text = emsg;
+                        }else{
+                            labelEmsg.color="green"
+                            labelEmsg.text = qsTr("connect success");
+                        }
+                        */
+                    }
+                }
+                Connections{
+                    target: BridgeProxy
+                    onTestProxyReply: {
+                        if(id != thisView.requestID){
+                            return
+                        }
+
+                        thisView.requestID = 0;
+
+                        gridLayout.enabled = true;
+                        busyIndicator.opacity = 0.0;
+                        if(emsg){
+                            labelEmsg.opacity = 1.0;
+                            labelEmsg.color="red";
+                            labelEmsg.text = emsg;
+                        }else{
+                            labelEmsg.opacity = 1.0;
+                            labelEmsg.color = "green";
+                            labelEmsg.text = qsTr("connect success");
+                        }
+                    }
+                }
+
             }
+
         }
     }
 }

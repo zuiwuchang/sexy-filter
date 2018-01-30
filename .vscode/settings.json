@@ -6,5 +6,10 @@
         "**/*.qmlc": true,
         "**/rcc*": true,
         "**/*.qm": true,
+        "**/moc.h": true,
+        "**/moc_moc.h": true,
+        "**/moc.cpp": true,
+        "**/moc.go": true,
+        "**/moc_cgo_*": true,
     },
 }

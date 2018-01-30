@@ -78,44 +78,59 @@
 <context>
     <name>proxy</name>
     <message>
-        <location filename="../views/pages/proxy.qml" line="20"/>
+        <location filename="../views/pages/proxy.qml" line="31"/>
         <source>type:</source>
         <translation>類型：</translation>
     </message>
     <message>
-        <location filename="../views/pages/proxy.qml" line="30"/>
+        <location filename="../views/pages/proxy.qml" line="41"/>
         <source>addr:</source>
         <translation>地址：</translation>
     </message>
     <message>
-        <location filename="../views/pages/proxy.qml" line="35"/>
+        <location filename="../views/pages/proxy.qml" line="46"/>
         <source>proxy address</source>
         <translation>代理地址 127.0.0.1:1911</translation>
     </message>
     <message>
-        <location filename="../views/pages/proxy.qml" line="40"/>
+        <location filename="../views/pages/proxy.qml" line="51"/>
         <source>user:</source>
         <translation>用戶名：</translation>
     </message>
     <message>
-        <location filename="../views/pages/proxy.qml" line="45"/>
+        <location filename="../views/pages/proxy.qml" line="57"/>
         <source>proxy user name</source>
         <translation>代理連接用戶名稱</translation>
     </message>
     <message>
-        <location filename="../views/pages/proxy.qml" line="50"/>
+        <location filename="../views/pages/proxy.qml" line="62"/>
         <source>pwd:</source>
         <translation>密碼：</translation>
     </message>
     <message>
-        <location filename="../views/pages/proxy.qml" line="55"/>
+        <location filename="../views/pages/proxy.qml" line="68"/>
         <source>proxy password</source>
         <translation>代理連接密碼</translation>
     </message>
     <message>
-        <location filename="../views/pages/proxy.qml" line="62"/>
+        <location filename="../views/pages/proxy.qml" line="74"/>
+        <source>test url:</source>
+        <translation>測試URL：</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/proxy.qml" line="79"/>
+        <source>test proxy connect url</source>
+        <translation>代理測試連接URL</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/proxy.qml" line="86"/>
         <source>test</source>
         <translation>測試代理</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/proxy.qml" line="99"/>
+        <source>connect success</source>
+        <translation>連接代理成功</translation>
     </message>
 </context>
 </TS>

@@ -2,9 +2,10 @@
 #include <QQmlApplicationEngine>
 #include <QTranslator>
 #include <QDebug>
-#include "bridgeconfigure.h"
 #include <QQmlContext>
 
+#include "bridgeconfigure.h"
+#include "bridgeproxy.h"
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_WIN)
@@ -26,6 +27,8 @@ int main(int argc, char *argv[])
 
     BridgeConfigure bridgeConfigure;
     content->setContextProperty("BridgeConfigure",&bridgeConfigure);
+    BridgeProxy bridgeProxy;
+    content->setContextProperty("BridgeProxy",&bridgeProxy);
 
     engine.load(QUrl(QStringLiteral("qrc:/views/main.qml")));
     if (engine.rootObjects().isEmpty())
