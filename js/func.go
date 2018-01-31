@@ -1,6 +1,8 @@
 package js
 
 import (
+	"bytes"
+	"fmt"
 	kStrings "github.com/zuiwuchang/king-go/strings"
 	"io/ioutil"
 	"os"
@@ -95,14 +97,23 @@ func testFile(jsPath, testPath string) (msg string, e error) {
 	}
 
 	//解析 數據
-	e = duk.Analyze("", kStrings.BytesToString(b))
+	nodes, e := duk.Analyze("", kStrings.BytesToString(b))
 	if e != nil {
 		if log.Warn != nil {
 			log.Warn.Println(e)
 		}
 		return
 	}
+	w := bytes.NewBufferString(fmt.Sprintf("%v : \n", duk.GetPluginsName("")))
+	for _, node := range nodes {
+		w.WriteString("\t")
+		w.WriteString(node.Title)
+		w.WriteString("\t")
+		w.WriteString(node.Url)
+		w.WriteString("\t")
+		w.WriteString("\n")
+	}
+	msg = w.String()
 
-	duk.DisplayPlugins()
 	return
 }

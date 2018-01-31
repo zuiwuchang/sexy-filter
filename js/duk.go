@@ -1,9 +1,7 @@
 package js
 
 import (
-	"bytes"
 	"errors"
-	"fmt"
 	"gopkg.in/olebedev/go-duktape.v3"
 	"os"
 	"sexy-filter/log"
@@ -36,7 +34,7 @@ func (d *Duktape) initPlugins() {
 	//加載 一個 插件
 	var loadPlugins = function(obj){
 		//驗證 id
-		var id = obj.ID();
+		var id = obj.Id();
 		if(!id){
 			throw "bad plugins id";
 		}
@@ -90,6 +88,22 @@ func (d *Duktape) initPlugins() {
 				throw "unknow plugins" + id;
 			}
 			return obj.Analyze(str);
+		},
+		//返回 插件 名稱
+		GetPluginsName:function(id){
+			var obj = getPlugins(id);
+			if(!obj){
+				return "unknow";
+			}
+			return obj.Name();
+		},
+		//返回 插件 id
+		GetPluginsId:function(id){
+			var obj = getPlugins(id);
+			if(!obj){
+				return "unknow";
+			}
+			return obj.Id();
 		},
 	};
 })();
@@ -150,8 +164,30 @@ func (d *Duktape) DisplayPlugins() {
 	duk.Pop()
 }
 
+//返回 插件名稱
+func (d *Duktape) GetPluginsName(id string) (name string) {
+	duk := d.duk
+	duk.GetPropString(0, "GetPluginsName")
+	duk.PushString(id)
+	duk.Pcall(1)
+	name = duk.SafeToString(-1)
+	duk.Pop()
+	return
+}
+
+//返回 插件id
+func (d *Duktape) GetPluginsId(id string) (name string) {
+	duk := d.duk
+	duk.GetPropString(0, "GetPluginsId")
+	duk.PushString(id)
+	duk.Pcall(1)
+	name = duk.SafeToString(-1)
+	duk.Pop()
+	return
+}
+
 //使用 指定 插件 解析 字符串
-func (d *Duktape) Analyze(id, str string) (nodes []Node, e error) {
+func (d *Duktape) Analyze(id, str string) (nodes []*Node, e error) {
 	duk := d.duk
 	duk.GetPropString(0, "Analyze")
 	duk.PushString(id)
@@ -166,22 +202,30 @@ func (d *Duktape) Analyze(id, str string) (nodes []Node, e error) {
 		return
 	}
 
-	var w bytes.Buffer
+	id = d.GetPluginsId(id)
+	name := d.GetPluginsName(id)
+
+	nodes = make([]*Node, 0, 20)
 	for i := 0; i < duk.GetLength(-1); i++ {
 		duk.GetPropIndex(-1, uint(i))
 		{
 			if duk.IsObject(-1) {
+				node := &Node{
+					PluginsId:   id,
+					PluginsName: name,
+				}
 				duk.GetPropString(-1, "Title")
-				w.WriteString(duk.SafeToString(-1))
-
+				node.Title = duk.SafeToString(-1)
 				duk.GetPropString(-2, "Url")
-				w.WriteString(duk.SafeToString(-1))
+				node.Url = duk.SafeToString(-1)
 
 				duk.Pop2()
+
+				nodes = append(nodes, node)
 			}
 		}
 		duk.Pop()
 	}
-	str = w.String()
+	duk.Pop()
 	return
 }
