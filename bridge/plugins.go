@@ -16,7 +16,7 @@ type bridgePlugins struct {
 	_ func() []string `slot:"getTestFiles"`
 
 	//測試 url 請求
-	_ func(jsFile string) int `slot:"testUrl"`
+	_ func(style int, addr, user, pwd, jsFile string) int `slot:"testUrl"`
 	//測試 檔案 分析
 	_ func(jsFile, testFile string) int `slot:"testFile"`
 	//返回 測試請求 結果
@@ -28,7 +28,7 @@ func initPlugins(context *qml.QQmlContext) {
 	bridge.ConnectGetPluginsFiles(js.GetPluginsFiles)
 	bridge.ConnectGetTestFiles(js.GetTestFiles)
 	id := 0
-	bridge.ConnectTestUrl(func(jsFile string) (requestID int) {
+	bridge.ConnectTestUrl(func(style int, addr, user, pwd, jsFile string) (requestID int) {
 		id++
 		requestID = id
 		if requestID == 0 {
@@ -36,7 +36,18 @@ func initPlugins(context *qml.QQmlContext) {
 			requestID = id
 
 		}
-
+		go func() {
+			msg, e := js.TestUrl(style,
+				addr, user, pwd,
+				jsFile,
+			)
+			if e == nil {
+				bridge.TestReply(requestID, "", msg)
+			} else {
+				emsg := "error : " + e.Error()
+				bridge.TestReply(requestID, emsg, "")
+			}
+		}()
 		return
 	})
 	bridge.ConnectTestFile(func(jsFile, testFile string) (requestID int) {

@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
+import QtQml.Models 2.2
 Pane{
     id:thisView
 
@@ -13,6 +14,15 @@ Pane{
         property string jsFile
         property string testFile
     }
+    Settings{
+        id:settingsProxy
+        category: "Proxy"
+        property real pos
+        property string addr
+        property string user
+        property string pwd
+    }
+
     ColumnLayout{
         anchors.fill: parent
 
@@ -81,11 +91,17 @@ Pane{
                  Button{
                      text: qsTr("test")
                      onClicked: {
+                         modelRs.clear();
+
                          if(switchTestUrl.checked){
                              //url 測試
                              gridLayout.enabled = false;
                              busyIndicator.opacity = 1.0;
                              thisView.requestID = BridgePlugins.testUrl(
+                                         settingsProxy.pos,
+                                         settingsProxy.addr,
+                                         settingsProxy.user,
+                                         settingsProxy.pwd,
                                          comboxJsFile.currentText
                                          );
                          }else{
@@ -103,7 +119,6 @@ Pane{
         }
         Column{
             anchors.horizontalCenter: parent.horizontalCenter
-            Layout.fillHeight: true
             Label{
                 id:labelEmsg
                 wrapMode: Label.Wrap
@@ -128,11 +143,47 @@ Pane{
                     }else{
                         labelEmsg.visible = true;
                         labelEmsg.color = "green";
-                        labelEmsg.text = qsTr("test success") + "\n" + msg;
+                        labelEmsg.text = qsTr("test success");
+
+                        if(!msg){
+                            return;
+                        }
+
+
+                        var arrs = JSON.parse(msg);
+                        if(arrs && arrs.length > 0){
+                            modelRs.append(arrs);
+                        }
                     }
 
                 }
             }
+
         }
+
+
+        Pane{
+            clip: true
+            id:viewRs
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            ScrollView{
+                anchors.fill: parent
+                ListView {
+                     model: modelRs
+                     delegate: RowLayout{
+                         ItemDelegate{
+                             text: Title
+                             onClicked:Qt.openUrlExternally(Url)
+                         }
+                     }
+
+                }
+                ListModel{
+                    id:modelRs
+                }
+            }
+        }
+
     }
 }

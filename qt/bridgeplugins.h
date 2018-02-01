@@ -16,7 +16,7 @@ public slots:
     QStringList getPluginsFiles();
     QStringList getTestFiles();
 
-    int testUrl(QString js);
+    int testUrl(int style,QString addr,QString user,QString pwd, QString js);
     int testFile(QString js,QString file);
 };
 

@@ -53,6 +53,10 @@
     //數據 分析 實現
     var analyze = function(str){
         var rs = [];
+        if(!str){
+            return rs;
+        }
+        str = GBKtoUTF8(str);
         var pos = 0;
         while(true){
             var begin = str.indexOf(TrBegin,pos);
@@ -92,7 +96,7 @@
             if(str == "Analyze"){
                 return str;
             }
-            
+
             //返回 分析 結果
             return analyze(str);
         },

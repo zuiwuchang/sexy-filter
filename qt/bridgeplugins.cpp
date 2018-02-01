@@ -24,7 +24,7 @@ QStringList BridgePlugins::getTestFiles()
 
     return arrs;
 }
-int BridgePlugins::testUrl(QString js)
+int BridgePlugins::testUrl(int style,QString addr,QString user,QString pwd, QString js)
 {
     int id = _id++;
     if(!id)
@@ -38,7 +38,18 @@ int BridgePlugins::testUrl(QString js)
 
         if(js == "1")
         {
-            emit ctx->testReply(id,"","yes");
+            emit ctx->testReply(id,"",R"(
+                                [
+                                      {
+                                      "Title":"t1",
+                                      "Url":"u1"
+                                      },
+                                      {
+                                      "Title":"t2",
+                                      "Url":"u2"
+                                      }
+                                ]
+                                      )");
         }
         else
         {
@@ -61,7 +72,18 @@ int BridgePlugins::testFile(QString js,QString file)
 
         if(js == "1")
         {
-            emit ctx->testReply(id,"","yes");
+            emit ctx->testReply(id,"",R"(
+                                [
+                                      {
+                                      "Title":"t1",
+                                      "Url":"u1"
+                                      },
+                                      {
+                                      "Title":"t2",
+                                      "Url":"u2"
+                                      }
+                                ]
+                                      )");
         }
         else
         {

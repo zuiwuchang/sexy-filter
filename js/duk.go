@@ -2,9 +2,11 @@ package js
 
 import (
 	"errors"
+	"github.com/axgle/mahonia"
 	"gopkg.in/olebedev/go-duktape.v3"
 	"os"
 	"sexy-filter/log"
+	"strings"
 )
 
 type Duktape struct {
@@ -105,6 +107,18 @@ func (d *Duktape) initPlugins() {
 			}
 			return obj.Id();
 		},
+		//返回 url 地址
+		GetUrl(id,i){
+			var obj = getPlugins(id);
+			if(!obj){
+				return "";
+			}
+			var url = obj.GetUrl(i);
+			if(!url){
+				return "";
+			}
+			return url;
+		}
 	};
 })();
 `)
@@ -118,12 +132,33 @@ func (d *Duktape) initPlugins() {
 
 //初始化 duk 環境
 func NewDuktape() (duk *Duktape) {
-
 	duk = &Duktape{
 		duk: duktape.New(),
 	}
+	duk.initTools()
 	duk.initPlugins()
 	return
+}
+
+//初始化 輔助 函數
+func (d *Duktape) initTools() {
+	duk := d.duk
+	duk.PushGlobalObject()
+
+	duk.PushGoFunction(func(c *duktape.Context) int {
+		if !c.IsString(-1) {
+			return 1
+		}
+		str := c.ToString(-1)
+
+		dec := mahonia.NewDecoder("gbk")
+		str = dec.ConvertString(str)
+		c.Pop()
+		c.PushString(str)
+		return 1
+	})
+	duk.PutPropString(-2, "GBKtoUTF8")
+	duk.Pop()
 }
 
 //將 一個 js 作爲 插件 加載
@@ -226,6 +261,31 @@ func (d *Duktape) Analyze(id, str string) (nodes []*Node, e error) {
 		}
 		duk.Pop()
 	}
+	duk.Pop()
+	return
+}
+
+//返回 url 地址
+func (d *Duktape) GetUrl(id string, i int) (url string) {
+	duk := d.duk
+	duk.GetPropString(0, "GetUrl")
+	duk.PushString(id)
+	duk.PushInt(i)
+	if duk.Pcall(2) != 0 {
+		if log.Error != nil {
+			log.Error.Println(duk.SafeToString(-1))
+		}
+		duk.Pop()
+		return
+	}
+	if !duk.IsString(-1) {
+		if log.Error != nil {
+			log.Error.Println("unknow plugins rs :", duk.SafeToString(-1))
+		}
+		duk.Pop()
+		return
+	}
+	url = strings.TrimSpace(duk.ToString(-1))
 	duk.Pop()
 	return
 }

@@ -1,17 +1,19 @@
 package js
 
 import (
-	"bytes"
-	"fmt"
+	"encoding/json"
+	"errors"
 	kStrings "github.com/zuiwuchang/king-go/strings"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sexy-filter/log"
+	"sexy-filter/net"
 	"strings"
 )
 
 var WorkDir string
+var ErrorRequestEnd = errors.New("request end")
 
 func init() {
 	abs, e := filepath.Abs(os.Args[0])
@@ -85,7 +87,6 @@ func testFile(jsPath, testPath string) (msg string, e error) {
 	//插件 js 環境
 	duk := NewDuktape()
 	defer duk.Close()
-	defer duk.duk.DumpContextStdout()
 
 	//加載 插件
 	e = duk.LoadPluginsJs(jsPath)
@@ -97,23 +98,83 @@ func testFile(jsPath, testPath string) (msg string, e error) {
 	}
 
 	//解析 數據
-	nodes, e := duk.Analyze("", kStrings.BytesToString(b))
+	var nodes []*Node
+	nodes, e = duk.Analyze("", kStrings.BytesToString(b))
 	if e != nil {
 		if log.Warn != nil {
 			log.Warn.Println(e)
 		}
 		return
 	}
-	w := bytes.NewBufferString(fmt.Sprintf("%v : \n", duk.GetPluginsName("")))
-	for _, node := range nodes {
-		w.WriteString("\t")
-		w.WriteString(node.Title)
-		w.WriteString("\t")
-		w.WriteString(node.Url)
-		w.WriteString("\t")
-		w.WriteString("\n")
+	if (len(nodes)) > 0 {
+		var b []byte
+		b, e = json.Marshal(nodes)
+		if e != nil {
+			if log.Warn != nil {
+				log.Warn.Println(e)
+			}
+			return
+		}
+		msg = kStrings.BytesToString(b)
 	}
-	msg = w.String()
+	return
+}
 
+//測試 插件 是否 正確 請求 url 並解析 檔案
+func TestUrl(style int, addr, user, pwd, jsFile string) (string, error) {
+	return testUrl(
+		style, addr,
+		user, pwd,
+		WorkDir+"/plugins-js/"+jsFile+".js",
+	)
+}
+func testUrl(style int, addr, user, pwd, jsPath string) (msg string, e error) {
+	//插件 js 環境
+	duk := NewDuktape()
+	defer duk.Close()
+
+	//加載 插件
+	e = duk.LoadPluginsJs(jsPath)
+	if e != nil {
+		if log.Warn != nil {
+			log.Warn.Println(e)
+		}
+		return
+	}
+
+	//返回 url
+	url := duk.GetUrl("", 0)
+	if url == "" {
+		e = ErrorRequestEnd
+		return
+	}
+	var str string
+	str, e = net.GetUrl(style, addr, user, pwd, url)
+	if e != nil {
+		if log.Warn != nil {
+			log.Warn.Println(e)
+		}
+	}
+
+	//解析 數據
+	var nodes []*Node
+	nodes, e = duk.Analyze("", str)
+	if e != nil {
+		if log.Warn != nil {
+			log.Warn.Println(e)
+		}
+		return
+	}
+	if (len(nodes)) > 0 {
+		var b []byte
+		b, e = json.Marshal(nodes)
+		if e != nil {
+			if log.Warn != nil {
+				log.Warn.Println(e)
+			}
+			return
+		}
+		msg = kStrings.BytesToString(b)
+	}
 	return
 }
