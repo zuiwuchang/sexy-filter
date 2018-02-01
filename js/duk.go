@@ -319,7 +319,6 @@ func (d *Duktape) GetUrl(id string, i int) (url string) {
 func (d *Duktape) GetPluginsNames() (rs []string) {
 	rs = make([]string, 0, 20)
 	duk := d.duk
-	defer duk.DumpContextStdout()
 	duk.GetPropString(0, "GetNames")
 	if duk.Pcall(0) != 0 {
 		if log.Error != nil {
