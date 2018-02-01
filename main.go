@@ -9,11 +9,13 @@ import (
 	"path/filepath"
 	"sexy-filter/bridge"
 	"sexy-filter/configure"
+	"sexy-filter/js"
 	kLog "sexy-filter/log"
 )
 
 func main() {
 	configure.Init(os.Args[0])
+	js.InitSingle()
 
 	app := gui.NewQGuiApplication(len(os.Args), os.Args)
 	app.SetAttribute(core.Qt__AA_EnableHighDpiScaling, true)

@@ -2,7 +2,8 @@ package js
 
 import (
 	"fmt"
-	"sexy-filter/net"
+	//"sexy-filter/net"
+	"path/filepath"
 	"testing"
 )
 
@@ -18,7 +19,7 @@ func TestFile0(t *testing.T) {
 	/**/
 }
 func TestUrl0(t *testing.T) {
-	/**/
+	/**
 	msg, e := testUrl(
 		net.ProxySocks5, "127.0.0.1:1080",
 		"", "",
@@ -29,4 +30,14 @@ func TestUrl0(t *testing.T) {
 	}
 	fmt.Println(msg)
 	/**/
+}
+
+func TestSingle(t *testing.T) {
+	str, _ := filepath.Abs("../")
+	WorkDir = str
+	fmt.Println(WorkDir)
+	InitSingle()
+
+	single := GetSingle()
+	fmt.Println(single.GetPlugins())
 }

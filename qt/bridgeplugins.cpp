@@ -92,3 +92,47 @@ int BridgePlugins::testFile(QString js,QString file)
     });
     return id;
 }
+int BridgePlugins::getStatus()
+{
+    return _status;
+}
+QStringList BridgePlugins::getPlugins()
+{
+    QStringList arrs;
+
+    arrs.append("1");
+    arrs.append("2");
+    arrs.append("3");
+
+    return arrs;
+}
+int BridgePlugins::start(int pos)
+{
+    if(_status != STATUS_NONE){
+        return _status;
+    }
+    _status = STATUS_RUN;
+
+    auto ctx = this;
+    boost::thread([=](){
+        boost::this_thread::sleep(boost::posix_time::seconds(1));
+        ctx->_status = STATUS_RUNING;
+        emit ctx->statusChanged(STATUS_RUNING);
+    });
+    return _status;
+}
+int BridgePlugins::stop()
+{
+    if(_status != STATUS_RUNING){
+        return _status;
+    }
+    _status = STATUS_STOPING;
+
+    auto ctx = this;
+    boost::thread([=](){
+        boost::this_thread::sleep(boost::posix_time::seconds(1));
+        ctx->_status = STATUS_NONE;
+        emit ctx->statusChanged(STATUS_NONE);
+    });
+    return _status;
+}

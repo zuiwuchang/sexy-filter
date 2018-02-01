@@ -10,5 +10,6 @@
         <file>views/images/menu.png</file>
         <file>views/pages/plugins.qml</file>
         <file>views/images/sexy.ico</file>
+        <file>views/pages/main.qml</file>
     </qresource>
 </RCC>

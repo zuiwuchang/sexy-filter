@@ -21,6 +21,17 @@ type bridgePlugins struct {
 	_ func(jsFile, testFile string) int `slot:"testFile"`
 	//返回 測試請求 結果
 	_ func(id int, emsg, msg string) `signal:"testReply"`
+
+	//返回 當前 單件 狀態
+	_ func() int `slot:"getStatus"`
+	//返回 插件名稱 數組
+	_ func() []string `slot:"getPlugins"`
+	//單件 開始 工作 並返回 當前狀態
+	_ func(pos int) int `slot:"start"`
+	//單件 停止 工作 並返回 當前狀態
+	_ func() int `slot:"stop"`
+	//單件 已開始工作 或 已停止 通知
+	_ func(val int) `signal:"statusChanged"`
 }
 
 func initPlugins(context *qml.QQmlContext) {
@@ -69,5 +80,15 @@ func initPlugins(context *qml.QQmlContext) {
 		}()
 		return
 	})
+
+	single := js.GetSingle()
+	bridge.ConnectGetStatus(single.Status)
+	bridge.ConnectGetPlugins(single.GetPlugins)
+	bridge.ConnectStart(single.Start)
+	bridge.ConnectStop(single.Stop)
+	single.OnStatusChanged = func(val int) {
+		bridge.StatusChanged(val)
+	}
+
 	context.SetContextProperty("BridgePlugins", bridge)
 }

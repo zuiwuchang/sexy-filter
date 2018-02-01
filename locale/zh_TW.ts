@@ -50,29 +50,64 @@
         <translation>sexy filter</translation>
     </message>
     <message>
-        <location filename="../views/main.qml" line="42"/>
+        <location filename="../views/main.qml" line="44"/>
         <source>filter</source>
         <translation>過濾</translation>
     </message>
     <message>
-        <location filename="../views/main.qml" line="65"/>
+        <location filename="../views/main.qml" line="67"/>
         <source>Settings</source>
         <translation>設置</translation>
     </message>
     <message>
-        <location filename="../views/main.qml" line="69"/>
+        <location filename="../views/main.qml" line="71"/>
         <source>About</source>
         <translation>關於</translation>
     </message>
     <message>
-        <location filename="../views/main.qml" line="102"/>
+        <location filename="../views/main.qml" line="103"/>
         <source>proxy settings</source>
         <translation>代理設置</translation>
     </message>
     <message>
-        <location filename="../views/main.qml" line="103"/>
+        <location filename="../views/main.qml" line="104"/>
         <source>plugins test</source>
         <translation>插件測試</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/main.qml" line="23"/>
+        <source>start</source>
+        <translation>開始</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/main.qml" line="23"/>
+        <source>stop</source>
+        <translation>停止</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/main.qml" line="34"/>
+        <source>Title:</source>
+        <translation>標題：</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/main.qml" line="41"/>
+        <source>search</source>
+        <translation>查找</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/main.qml" line="45"/>
+        <source>PluginsName:</source>
+        <translation>插件名：</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/main.qml" line="54"/>
+        <source>PluginsId:</source>
+        <translation>插件ID：</translation>
+    </message>
+    <message>
+        <location filename="../views/pages/main.qml" line="63"/>
+        <source>limit:</source>
+        <translation>數量：</translation>
     </message>
 </context>
 <context>
@@ -98,7 +133,7 @@
         <translation>測試插件</translation>
     </message>
     <message>
-        <location filename="../views/pages/plugins.qml" line="141"/>
+        <location filename="../views/pages/plugins.qml" line="146"/>
         <source>test success</source>
         <translation>測試成功</translation>
     </message>

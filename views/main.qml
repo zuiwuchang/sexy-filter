@@ -9,6 +9,8 @@ ApplicationWindow {
   id: window
   visible: true
   title: qsTr("sexy filter")
+  width: 800
+  height: 600
   minimumWidth: 640
   minimumHeight: 480
 
@@ -73,7 +75,6 @@ ApplicationWindow {
           }
       }
   }
-
   Drawer {
           id: drawer
           width: Math.min(window.width, window.height) / 3 * 2
@@ -111,18 +112,8 @@ ApplicationWindow {
           id: stackView
           anchors.fill: parent
 
-          initialItem: Pane {
-              id: pane
-
-              Label {
-                  text: "view"
-                  anchors.margins: 20
-                  anchors.left: parent.left
-                  anchors.right: parent.right
-                  horizontalAlignment: Label.AlignHCenter
-                  verticalAlignment: Label.AlignVCenter
-                  wrapMode: Label.Wrap
-              }
+          initialItem:Loader{
+              source:"pages/main.qml"
           }
       }
       Settings{

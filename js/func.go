@@ -25,7 +25,6 @@ func init() {
 		return
 	}
 	WorkDir = filepath.Dir(abs)
-
 }
 
 //返回 所有 的 插件 檔案

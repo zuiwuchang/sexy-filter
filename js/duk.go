@@ -70,6 +70,28 @@ func (d *Duktape) initPlugins() {
 		}
 		return pDefault;
 	}
+	//插件 數組 緩存
+	var cacheNames = null;
+	var cachePlugins = null;
+	var initCache = function(){
+		if(cacheNames != null){
+			return;
+		}
+		cacheNames = [];
+		cachePlugins = [];
+		var i = 0;
+		for(var key in pPlugins){
+			var obj = pPlugins[key];
+
+			cachePlugins.push(obj);
+			cacheNames.push(obj.Name());
+		}
+	}
+	var getNames = function(){
+		initCache();
+
+		return cacheNames;
+	};
 	return {
 		//加載 一個 插件
 		LoadPlugins:function(obj){
@@ -108,7 +130,7 @@ func (d *Duktape) initPlugins() {
 			return obj.Id();
 		},
 		//返回 url 地址
-		GetUrl(id,i){
+		GetUrl:function(id,i){
 			var obj = getPlugins(id);
 			if(!obj){
 				return "";
@@ -118,7 +140,10 @@ func (d *Duktape) initPlugins() {
 				return "";
 			}
 			return url;
-		}
+		},
+		GetNames:function(){
+			return getNames();
+		},
 	};
 })();
 `)
@@ -286,6 +311,29 @@ func (d *Duktape) GetUrl(id string, i int) (url string) {
 		return
 	}
 	url = strings.TrimSpace(duk.ToString(-1))
+	duk.Pop()
+	return
+}
+
+//返回 插件 名 數組
+func (d *Duktape) GetPluginsNames() (rs []string) {
+	rs = make([]string, 0, 20)
+	duk := d.duk
+	defer duk.DumpContextStdout()
+	duk.GetPropString(0, "GetNames")
+	if duk.Pcall(0) != 0 {
+		if log.Error != nil {
+			log.Error.Println(duk.SafeToString(-1))
+		}
+		duk.Pop()
+		return
+	}
+
+	for i := 0; i < duk.GetLength(-1); i++ {
+		duk.GetPropIndex(-1, uint(i))
+		rs = append(rs, duk.SafeToString(-1))
+		duk.Pop()
+	}
 	duk.Pop()
 	return
 }
