@@ -1,5 +1,12 @@
 package js
 
+const (
+	ColNodeUrl         = "url"
+	ColNodeTiTle       = "title"
+	ColNodePluginsId   = "plugins_id"
+	ColNodePluginsName = "plugins_name"
+)
+
 type Node struct {
 	//url 地址
 	Url string `xorm:"unique"`

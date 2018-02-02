@@ -169,6 +169,14 @@ Pane{
                             text: modelData.title
                             onClicked:Qt.openUrlExternally(modelData.url)
                         }
+                        ItemDelegate{
+                            text: modelData.pluginsName
+                            onClicked:Qt.openUrlExternally(modelData.url)
+                        }
+                        ItemDelegate{
+                            text: modelData.pluginsId
+                            onClicked:Qt.openUrlExternally(modelData.url)
+                        }
                      }
                 }
                 Connections{

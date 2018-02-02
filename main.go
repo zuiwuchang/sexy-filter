@@ -88,7 +88,7 @@ func main() {
 	engine := qml.NewQQmlApplicationEngine(nil)
 	bridge.Init(engine.RootContext())
 
-	//engine.Load(core.NewQUrl3("qrc:/views/main.qml", 0))
-	engine.Load(core.NewQUrl3("views/main.qml", 0))
+	engine.Load(core.NewQUrl3("qrc:/views/main.qml", 0))
+	//engine.Load(core.NewQUrl3("views/main.qml", 0))
 	gui.QGuiApplication_Exec()
 }

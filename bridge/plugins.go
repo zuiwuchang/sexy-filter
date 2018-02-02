@@ -44,31 +44,60 @@ type bridgePlugins struct {
 	//單件 已開始工作 或 已停止 通知
 	_ func(val int) `signal:"statusChanged"`
 
-	_          func() `constructor:"init"`
-	modelTest  *wrapperNode
-	modelNodes []*js.Node
-	_          func() `signal:"qtModelTestChanged"`
+	//返回 查找 model
+	_ func() []*core.QObject `slot:"getModelSearch"`
+	//查找 model 已經改變
+	_ func() `signal:"modelSearchChanged"`
+	//查找 數據
+	_ func(title, name, id, limit string) `slot:"search"`
+
+	_ func() `constructor:"init"`
+
+	modelTest    *wrapperNode
+	tmpModelTest []*js.Node
+	_            func() `signal:"qtModelTestChanged"`
+
+	modelSearch    *wrapperNode
+	tmpModelSearch []*js.Node
+	_              func() `signal:"qtModelSearchChanged"`
 }
 
 func (b *bridgePlugins) init() {
 	b.modelTest = newWrapperNode()
+	b.modelSearch = newWrapperNode()
 	b.ConnectDestroyBridgePlugins(func() {
 		b.clearModelTest()
+		b.clearModelSearch()
 	})
 	b.ConnectQtModelTestChanged(func() {
-		if len(b.modelNodes) < 0 {
+		if len(b.tmpModelTest) < 0 {
 			return
 		}
-		b.modelTest.Append(b.modelNodes)
-		b.modelNodes = nil
+		b.modelTest.Append(b.tmpModelTest)
+		b.tmpModelTest = nil
 
 		//emit
 		b.ModelTestChanged()
+	})
+	b.ConnectQtModelSearchChanged(func() {
+		if len(b.tmpModelSearch) < 0 {
+			return
+		}
+
+		b.modelSearch.Append(b.tmpModelSearch)
+		b.tmpModelSearch = nil
+
+		//emit
+		b.ModelSearchChanged()
 	})
 }
 func (b *bridgePlugins) getQtModelTest() []*core.QObject {
 	return b.modelTest.qtArrs
 }
+func (b *bridgePlugins) getQtModelSearch() []*core.QObject {
+	return b.modelSearch.qtArrs
+}
+
 func (b *bridgePlugins) clearModelTest() {
 	m := b.modelTest
 	if len(m.arrs) == 0 {
@@ -79,13 +108,31 @@ func (b *bridgePlugins) clearModelTest() {
 	//emit
 	b.ModelTestChanged()
 }
+func (b *bridgePlugins) clearModelSearch() {
+	m := b.modelSearch
+	if len(m.arrs) == 0 {
+		return
+	}
+	m.Clear()
+
+	//emit
+	b.ModelSearchChanged()
+}
 func (b *bridgePlugins) appendModelTest(nodes []*js.Node) {
 	if len(nodes) == 0 {
 		return
 	}
 
-	b.modelNodes = nodes
+	b.tmpModelTest = nodes
 	b.QtModelTestChanged()
+}
+func (b *bridgePlugins) appendModelSearch(nodes []*js.Node) {
+	if len(nodes) == 0 {
+		return
+	}
+
+	b.tmpModelSearch = nodes
+	b.QtModelSearchChanged()
 }
 
 type wrapperNode struct {
@@ -188,6 +235,14 @@ func initPlugins(context *qml.QQmlContext) {
 	single.OnStatusChanged = func(val int) {
 		bridge.StatusChanged(val)
 	}
+
+	bridge.ConnectSearch(func(title, name, id, limit string) {
+		bridge.clearModelSearch()
+
+		nodes := js.Search(title, name, id, limit)
+		bridge.appendModelSearch(nodes)
+	})
+	bridge.ConnectGetModelSearch(bridge.getQtModelSearch)
 
 	context.SetContextProperty("BridgePlugins", bridge)
 }

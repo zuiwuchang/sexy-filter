@@ -86,7 +86,14 @@ Pane{
                 }
                 Button{
                     text: qsTr("search")
-                    onClicked: console.log(BridgePlugins.getStatus())
+                    onClicked: {
+                        BridgePlugins.search(
+                                    textTitle.text,
+                                    textPluginsName.text,
+                                    textPluginsId.text,
+                                    textLimit.text
+                                    );
+                    }
                 }
 
                 Label{
@@ -117,7 +124,7 @@ Pane{
                 TextField{
                     id:textLimit
                     Layout.fillWidth: true
-                    placeholderText: "[begin,]end  (max 100)"
+                    placeholderText: "rows[,start]  (max 100)"
                     text: settings.textLimit
                 }
             }
@@ -129,32 +136,32 @@ Pane{
             clip: true
             ScrollView{
                 anchors.fill: parent
+                clip: true
                 ListView{
-                    model:listModel
+                    id:listView
+                    model:BridgePlugins.getModelSearch()
                     delegate: RowLayout{
                         ItemDelegate{
                             text: index
                             onClicked:Qt.openUrlExternally(index)
                         }
                         ItemDelegate{
-                            text: Title
-                            onClicked:Qt.openUrlExternally(Url)
+                            text: modelData.title
+                            onClicked:Qt.openUrlExternally(modelData.url)
                         }
                         ItemDelegate{
-                            text: PluginsName
-                            onClicked:Qt.openUrlExternally(Url)
+                            text: modelData.pluginsName
+                            onClicked:Qt.openUrlExternally(modelData.url)
                         }
                         ItemDelegate{
-                            text: PluginsId
-                            onClicked:Qt.openUrlExternally(Url)
+                            text: modelData.pluginsId
+                            onClicked:Qt.openUrlExternally(modelData.url)
                         }
-                    }
-                    Component.onCompleted: {
-
                     }
                 }
-                ListModel{
-                    id:listModel
+                Connections{
+                    target: BridgePlugins
+                    onModelSearchChanged:listView.model = BridgePlugins.getModelSearch()
                 }
             }
         }
