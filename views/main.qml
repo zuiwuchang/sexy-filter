@@ -1,5 +1,5 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.1
+import QtQuick 2.9
+import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import QtQuick.Controls.Universal 2.0
 import QtQuick.Layouts 1.3
@@ -14,9 +14,10 @@ ApplicationWindow {
   minimumWidth: 640
   minimumHeight: 480
 
-  Material.theme: BridgeConfigure.getStyle()==0?"Dark":"Light"
-  Universal.theme: BridgeConfigure.getStyle()==2?"Dark":"Light"
-
+  Component.onCompleted: {
+      Material.theme = BridgeConfigure.getStyle()==0 ? Material.Dark : Material.Light
+      Universal.theme = BridgeConfigure.getStyle()==2 ? Universal.Dark : Universal.Light
+}
   header: ToolBar {
       RowLayout {
           spacing: 20

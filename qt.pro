@@ -1,6 +1,10 @@
 QT += quick qml gui
 CONFIG += c++11
-LIBS += -lboost_system -lboost_thread -lboost_date_time
+win32 {
+    LIBS += -lboost_system-mt -lboost_thread-mt -lboost_date_time-mt
+}else{
+    LIBS += -lboost_system -lboost_thread -lboost_date_time
+}
 
 TRANSLATIONS += locale/zh_TW.ts
 
