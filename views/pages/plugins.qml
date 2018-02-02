@@ -91,8 +91,6 @@ Pane{
                  Button{
                      text: qsTr("test")
                      onClicked: {
-                         modelRs.clear();
-
                          if(switchTestUrl.checked){
                              //url 測試
                              gridLayout.enabled = false;
@@ -144,16 +142,6 @@ Pane{
                         labelEmsg.visible = true;
                         labelEmsg.color = "green";
                         labelEmsg.text = qsTr("test success");
-
-                        if(!msg){
-                            return;
-                        }
-
-
-                        var arrs = JSON.parse(msg);
-                        if(arrs && arrs.length > 0){
-                            modelRs.append(arrs);
-                        }
                     }
 
                 }
@@ -170,17 +158,22 @@ Pane{
             ScrollView{
                 anchors.fill: parent
                 ListView {
-                     model: modelRs
-                     delegate: RowLayout{
-                         ItemDelegate{
-                             text: Title
-                             onClicked:Qt.openUrlExternally(Url)
-                         }
+                    id:listView
+                    model: BridgePlugins.getModelTest()
+                    delegate: RowLayout{
+                        ItemDelegate{
+                            text: index
+                            onClicked:Qt.openUrlExternally(modelData.url)
+                        }
+                        ItemDelegate{
+                            text: modelData.title
+                            onClicked:Qt.openUrlExternally(modelData.url)
+                        }
                      }
-
                 }
-                ListModel{
-                    id:modelRs
+                Connections{
+                    target: BridgePlugins
+                    onModelTestChanged:listView.model = BridgePlugins.getModelTest()
                 }
             }
         }

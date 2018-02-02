@@ -92,6 +92,13 @@ func (d *Duktape) initPlugins() {
 
 		return cacheNames;
 	};
+	var getPluginsIdByPos = function(i){
+		initCache();
+		if(i > cachePlugins.length || i < 0){
+			return "";
+		}
+		return cachePlugins[i].Id();
+	};
 	return {
 		//加載 一個 插件
 		LoadPlugins:function(obj){
@@ -143,6 +150,9 @@ func (d *Duktape) initPlugins() {
 		},
 		GetNames:function(){
 			return getNames();
+		},
+		GetPluginsIdByPos:function(i){
+			return getPluginsIdByPos(i);
 		},
 	};
 })();
@@ -332,6 +342,25 @@ func (d *Duktape) GetPluginsNames() (rs []string) {
 		duk.GetPropIndex(-1, uint(i))
 		rs = append(rs, duk.SafeToString(-1))
 		duk.Pop()
+	}
+	duk.Pop()
+	return
+}
+
+//返回 插件 id
+func (d *Duktape) GetPluginsIdByPos(i int) (id string) {
+	duk := d.duk
+	duk.GetPropString(0, "GetPluginsIdByPos")
+	duk.PushInt(i)
+	if duk.Pcall(1) != 0 {
+		if log.Error != nil {
+			log.Error.Println(duk.SafeToString(-1))
+		}
+		duk.Pop()
+		return
+	}
+	if duk.IsString(-1) {
+		id = duk.ToString(-1)
 	}
 	duk.Pop()
 	return

@@ -1,7 +1,6 @@
 package js
 
 import (
-	"encoding/json"
 	"errors"
 	kStrings "github.com/zuiwuchang/king-go/strings"
 	"io/ioutil"
@@ -66,13 +65,13 @@ func GetTestFiles() (rs []string) {
 }
 
 //測試 插件 是否可以 正確 解析 檔案
-func TestFile(jsFile, tFile string) (string, error) {
+func TestFile(jsFile, tFile string) ([]*Node, error) {
 	return testFile(
 		WorkDir+"/plugins-js/"+jsFile+".js",
 		WorkDir+"/test-js/"+tFile,
 	)
 }
-func testFile(jsPath, testPath string) (msg string, e error) {
+func testFile(jsPath, testPath string) (nodes []*Node, e error) {
 	//讀取 檔案
 	b, ef := ioutil.ReadFile(testPath)
 	if ef != nil {
@@ -97,37 +96,19 @@ func testFile(jsPath, testPath string) (msg string, e error) {
 	}
 
 	//解析 數據
-	var nodes []*Node
 	nodes, e = duk.Analyze("", kStrings.BytesToString(b))
-	if e != nil {
-		if log.Warn != nil {
-			log.Warn.Println(e)
-		}
-		return
-	}
-	if (len(nodes)) > 0 {
-		var b []byte
-		b, e = json.Marshal(nodes)
-		if e != nil {
-			if log.Warn != nil {
-				log.Warn.Println(e)
-			}
-			return
-		}
-		msg = kStrings.BytesToString(b)
-	}
 	return
 }
 
 //測試 插件 是否 正確 請求 url 並解析 檔案
-func TestUrl(style int, addr, user, pwd, jsFile string) (string, error) {
+func TestUrl(style int, addr, user, pwd, jsFile string) ([]*Node, error) {
 	return testUrl(
 		style, addr,
 		user, pwd,
 		WorkDir+"/plugins-js/"+jsFile+".js",
 	)
 }
-func testUrl(style int, addr, user, pwd, jsPath string) (msg string, e error) {
+func testUrl(style int, addr, user, pwd, jsPath string) (nodes []*Node, e error) {
 	//插件 js 環境
 	duk := NewDuktape()
 	defer duk.Close()
@@ -156,24 +137,6 @@ func testUrl(style int, addr, user, pwd, jsPath string) (msg string, e error) {
 	}
 
 	//解析 數據
-	var nodes []*Node
 	nodes, e = duk.Analyze("", str)
-	if e != nil {
-		if log.Warn != nil {
-			log.Warn.Println(e)
-		}
-		return
-	}
-	if (len(nodes)) > 0 {
-		var b []byte
-		b, e = json.Marshal(nodes)
-		if e != nil {
-			if log.Warn != nil {
-				log.Warn.Println(e)
-			}
-			return
-		}
-		msg = kStrings.BytesToString(b)
-	}
 	return
 }

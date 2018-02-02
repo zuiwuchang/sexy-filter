@@ -22,6 +22,14 @@ Pane{
         property string textPluginsId: textPluginsId.text
         property string textLimit: textLimit.text
     }
+    Settings{
+        id:settingsProxy
+        category: "Proxy"
+        property real pos
+        property string addr
+        property string user
+        property string pwd
+    }
 
     ColumnLayout{
         anchors.fill: parent
@@ -47,7 +55,12 @@ Pane{
                         if(thisView.statusNone == thisView.status){
                             var i = comboxPlugins.currentIndex;
                             if(i!=-1){
-                                thisView.status = BridgePlugins.start(comboxPlugins.currentIndex);
+                                thisView.status = BridgePlugins.start(
+                                            settingsProxy.pos,
+                                            settingsProxy.addr,
+                                            settingsProxy.user,
+                                            settingsProxy.pwd,
+                                            comboxPlugins.currentIndex);
                             }
                         }else if(thisView.statusRuning == thisView.status){
                             thisView.status = BridgePlugins.stop();
@@ -73,6 +86,7 @@ Pane{
                 }
                 Button{
                     text: qsTr("search")
+                    onClicked: console.log(BridgePlugins.getStatus())
                 }
 
                 Label{
@@ -103,7 +117,7 @@ Pane{
                 TextField{
                     id:textLimit
                     Layout.fillWidth: true
-                    placeholderText: "[begin,]end"
+                    placeholderText: "[begin,]end  (max 100)"
                     text: settings.textLimit
                 }
             }
@@ -135,45 +149,12 @@ Pane{
                             onClicked:Qt.openUrlExternally(Url)
                         }
                     }
+                    Component.onCompleted: {
+
+                    }
                 }
                 ListModel{
                     id:listModel
-                    ListElement{
-                        Title:"123"
-                        Url:"ok"
-                        PluginsId:"id"
-                        PluginsName:"name"
-                    }
-                    ListElement{
-                        Title:"123"
-                        Url:"ok"
-                        PluginsId:"id"
-                        PluginsName:"name"
-                    }
-                    ListElement{
-                        Title:"123"
-                        Url:"ok"
-                        PluginsId:"id"
-                        PluginsName:"name"
-                    }
-                    ListElement{
-                        Title:"123"
-                        Url:"ok"
-                        PluginsId:"id"
-                        PluginsName:"name"
-                    }
-                    ListElement{
-                        Title:"123"
-                        Url:"ok"
-                        PluginsId:"id"
-                        PluginsName:"name"
-                    }
-                    ListElement{
-                        Title:"123"
-                        Url:"ok"
-                        PluginsId:"id"
-                        PluginsName:"name"
-                    }
                 }
             }
         }

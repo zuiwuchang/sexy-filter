@@ -1,5 +1,6 @@
 #include "bridgeplugins.h"
 #include <boost/thread.hpp>
+#include <QDebug>
 BridgePlugins::BridgePlugins(QObject *parent) : QObject(parent)
 {
 
@@ -26,11 +27,22 @@ QStringList BridgePlugins::getTestFiles()
 }
 int BridgePlugins::testUrl(int style,QString addr,QString user,QString pwd, QString js)
 {
+    clearModelTest();
+
     int id = _id++;
     if(!id)
     {
         id = _id++;
     }
+
+    auto p0 = new NodeObject();
+    p0->setTitle("測試 url 0");
+    p0->setUrl("https://www.google.com.tw");
+    modelTest.append(p0);
+    p0 = new NodeObject();
+    p0->setTitle("測試 url 1");
+    p0->setUrl("https://www.google.co.jp");
+    modelTest.append(p0);
 
     auto ctx = this;
     boost::thread([=](){
@@ -38,33 +50,49 @@ int BridgePlugins::testUrl(int style,QString addr,QString user,QString pwd, QStr
 
         if(js == "1")
         {
-            emit ctx->testReply(id,"",R"(
-                                [
-                                      {
-                                      "Title":"t1",
-                                      "Url":"u1"
-                                      },
-                                      {
-                                      "Title":"t2",
-                                      "Url":"u2"
-                                      }
-                                ]
-                                      )");
+            emit ctx->testReply(id,"");
         }
         else
         {
-            emit ctx->testReply(id,"BridgePlugins::testUrl test error","");
+            emit ctx->testReply(id,"BridgePlugins::testUrl test error");
         }
+
+        emit modelTestChanged();
     });
     return id;
 }
+void BridgePlugins::clearModelTest()
+{
+    if(modelTest.empty())
+    {
+        return;
+    }
+
+    for(auto p:modelTest)
+    {
+        delete (NodeObject*)(p);
+    }
+    modelTest.clear();
+    emit modelTestChanged();
+}
 int BridgePlugins::testFile(QString js,QString file)
 {
+    clearModelTest();
+
     int id = _id++;
     if(!id)
     {
         id = _id++;
     }
+
+    auto p0 = new NodeObject();
+    p0->setTitle("測試 file 0");
+    p0->setUrl("https://www.google.com.tw");
+    modelTest.append(p0);
+    p0 = new NodeObject();
+    p0->setTitle("測試 file 1");
+    p0->setUrl("https://www.google.co.jp");
+    modelTest.append(p0);
 
     auto ctx = this;
     boost::thread([=](){
@@ -72,25 +100,20 @@ int BridgePlugins::testFile(QString js,QString file)
 
         if(js == "1")
         {
-            emit ctx->testReply(id,"",R"(
-                                [
-                                      {
-                                      "Title":"t1",
-                                      "Url":"u1"
-                                      },
-                                      {
-                                      "Title":"t2",
-                                      "Url":"u2"
-                                      }
-                                ]
-                                      )");
+            emit ctx->testReply(id,"");
         }
         else
         {
-            emit ctx->testReply(id,"BridgePlugins::testFile test error","");
+            emit ctx->testReply(id,"BridgePlugins::testFile test error");
         }
+
+        emit modelTestChanged();
     });
     return id;
+}
+QVariant BridgePlugins::getModelTest()
+{
+    return QVariant::fromValue(modelTest);
 }
 int BridgePlugins::getStatus()
 {
@@ -106,7 +129,7 @@ QStringList BridgePlugins::getPlugins()
 
     return arrs;
 }
-int BridgePlugins::start(int pos)
+int BridgePlugins::start(int style,QString addr,QString user,QString pwd,int pos)
 {
     if(_status != STATUS_NONE){
         return _status;

@@ -2,11 +2,11 @@ package js
 
 type Node struct {
 	//url 地址
-	Url string
+	Url string `xorm:"unique"`
 	//標題
-	Title string
+	Title string `xorm:"index"`
 	//插件 Id
-	PluginsId string
+	PluginsId string `xorm:"index"`
 	//插件 名稱
-	PluginsName string
+	PluginsName string `xorm:"index"`
 }

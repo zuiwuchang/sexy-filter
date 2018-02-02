@@ -75,37 +75,37 @@
         <translation>插件測試</translation>
     </message>
     <message>
-        <location filename="../views/pages/main.qml" line="23"/>
+        <location filename="../views/pages/main.qml" line="45"/>
         <source>start</source>
         <translation>開始</translation>
     </message>
     <message>
-        <location filename="../views/pages/main.qml" line="23"/>
+        <location filename="../views/pages/main.qml" line="45"/>
         <source>stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../views/pages/main.qml" line="34"/>
+        <location filename="../views/pages/main.qml" line="66"/>
         <source>Title:</source>
         <translation>標題：</translation>
     </message>
     <message>
-        <location filename="../views/pages/main.qml" line="41"/>
+        <location filename="../views/pages/main.qml" line="75"/>
         <source>search</source>
         <translation>查找</translation>
     </message>
     <message>
-        <location filename="../views/pages/main.qml" line="45"/>
+        <location filename="../views/pages/main.qml" line="79"/>
         <source>PluginsName:</source>
         <translation>插件名：</translation>
     </message>
     <message>
-        <location filename="../views/pages/main.qml" line="54"/>
+        <location filename="../views/pages/main.qml" line="90"/>
         <source>PluginsId:</source>
         <translation>插件ID：</translation>
     </message>
     <message>
-        <location filename="../views/pages/main.qml" line="63"/>
+        <location filename="../views/pages/main.qml" line="101"/>
         <source>limit:</source>
         <translation>數量：</translation>
     </message>

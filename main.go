@@ -16,6 +16,10 @@ import (
 func main() {
 	configure.Init(os.Args[0])
 	js.InitSingle()
+	if e := js.InitDB(); e != nil {
+		os.Exit(-1)
+		return
+	}
 
 	app := gui.NewQGuiApplication(len(os.Args), os.Args)
 	app.SetAttribute(core.Qt__AA_EnableHighDpiScaling, true)

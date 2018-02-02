@@ -122,8 +122,7 @@ func createHttpClient(addr string) (c *http.Client, e error) {
 	}
 	return
 }
-func GetUrl(style int, addr, user, pwd, url string) (msg string, e error) {
-	var c *http.Client
+func CreateClient(style int, addr, user, pwd string) (c *http.Client, e error) {
 	switch style {
 	case 0:
 		c = &http.Client{}
@@ -137,13 +136,19 @@ func GetUrl(style int, addr, user, pwd, url string) (msg string, e error) {
 		c, e = createHttpClient(addr)
 	default:
 		e = errors.New("unkonw proxy type")
+	}
+	return
+}
+func GetUrl(style int, addr, user, pwd, url string) (msg string, e error) {
+	var c *http.Client
+	c, e = CreateClient(style, addr, user, pwd)
+	if e != nil {
 		if log.Error != nil {
 			log.Error.Println(e)
 		}
-	}
-	if e != nil {
 		return
 	}
+
 	var r *http.Response
 	r, e = c.Get(url)
 	if e != nil {

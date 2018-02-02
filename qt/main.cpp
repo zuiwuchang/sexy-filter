@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QQmlContext>
 #include <QIcon>
+#include <QStringList>
 
 #include "bridgeconfigure.h"
 #include "bridgeproxy.h"
@@ -29,6 +30,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext* content = engine.rootContext();
 
+
+    //brige
     BridgeConfigure bridgeConfigure;
     content->setContextProperty("BridgeConfigure",&bridgeConfigure);
     BridgeProxy bridgeProxy;

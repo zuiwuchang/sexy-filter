@@ -18,7 +18,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += qt/bridgeconfigure.cpp \
     qt/main.cpp \
     qt/bridgeproxy.cpp \
-    qt/bridgeplugins.cpp
+    qt/bridgeplugins.cpp \
+    qt/nodeobject.cpp
 
 RESOURCES += qml.qrc
 
@@ -38,4 +39,5 @@ DISTFILES +=
 HEADERS += \
     qt/bridgeconfigure.h \
     qt/bridgeproxy.h \
-    qt/bridgeplugins.h
+    qt/bridgeplugins.h \
+    qt/nodeobject.h
